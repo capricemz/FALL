@@ -2,6 +2,7 @@ package com.gamesystem.engine
 {
 	import com.framework.BasicModule;
 	import com.framework.MsgIds;
+	import com.util.Layers;
 	
 	import flash.utils.ByteArray;
 	
@@ -16,7 +17,7 @@ package com.gamesystem.engine
 			switch (msgId)
 			{
 				case MsgIds.ENGINE_INIT:
-					var box2d_engine:Box2DEngine = new Box2DEngine();
+					var box2d_engine:Box2DEngine = new Box2DEngine(Layers.stage);
 					box2d_engine.startEngine();
 					break;
 			}

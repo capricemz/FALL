@@ -4,7 +4,7 @@ package com.gamesystem.engine
 	 * Box2D常量定义类
 	 * @author Administrator
 	 */	
-	public class Consts
+	public class EngineConsts
 	{
 		public static const P2M:int = 30;
 		
@@ -14,5 +14,8 @@ package com.gamesystem.engine
 		
 		public static const maskbits_1:uint = categotybits_1 + categotybits_2;
 		public static const maskbits_2:uint = categotybits_1;
+		
+		/**鼠标关节id*/
+		public static const mouseJoint:int = 1315211905;
 	}
 }

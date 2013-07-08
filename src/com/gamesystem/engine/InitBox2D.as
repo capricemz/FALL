@@ -23,8 +23,10 @@ package com.gamesystem.engine
 	import com.gamesystem.engine.I_Fs.IUserData;
 	
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 
 	/**
 	 * Box2D世界及其他所有对象构造类
@@ -33,25 +35,34 @@ package com.gamesystem.engine
 	public class InitBox2D
 	{
 		private static var inst:InitBox2D;
-		//重力向量
-		private var gravity:b2Vec2;
-		//是否休眠
-		private var doSleep:Boolean;
-		
-		private var _world:b2World;
-		private var debugSprite:Sprite
-		
 		public static function getInst():InitBox2D
 		{
 			if(!inst)
-				inst = new InitBox2D();
+				inst = new InitBox2D(hiddle);
 			return inst;
 		}
-		public function InitBox2D()
+		private static function hiddle():void{}
+		public function InitBox2D(fun:Function)
 		{
+			if(fun != hiddle)
+				throw new Error("只能用getInst()来获取实例");
 			gravity = new b2Vec2(0,0);
 			doSleep = true;
+			box2ds = new Dictionary();
+			
 		}
+		
+		/**重力向量*/
+		private var gravity:b2Vec2;
+		/**是否休眠*/
+		private var doSleep:Boolean;
+		/**物理世界*/
+		private var _world:b2World;
+		/**调试画布*/
+		private var debugSprite:Sprite;
+		/**Box2D对象集合*/
+		private var box2ds:Dictionary;
+		
 		public function creatWorld():void
 		{
 			_world = new b2World(gravity,doSleep);
@@ -78,7 +89,7 @@ package com.gamesystem.engine
 			//设置显示对象
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit|b2DebugDraw.e_jointBit);
 			//物理世界缩放
-			debugDraw.SetDrawScale(Consts.P2M);
+			debugDraw.SetDrawScale(EngineConsts.P2M);
 			_world.SetDebugDraw(debugDraw);
 			
 			return debugSprite;
@@ -102,7 +113,7 @@ package com.gamesystem.engine
 			//刚体类型和位置
 			bodyDef.type = type;
 			//注意刚体的注册中心都是在物体的中心位置
-			bodyDef.position.Set(init_point.x/Consts.P2M, init_point.y/Consts.P2M);
+			bodyDef.position.Set(init_point.x/EngineConsts.P2M, init_point.y/EngineConsts.P2M);
 			bodyDef.fixedRotation = false;
 			bodyDef.allowSleep = false;
 			//工厂模式创建刚体
@@ -124,7 +135,7 @@ package com.gamesystem.engine
 				case 0:
 					shape = new b2PolygonShape();
 					//此处参数为宽和高度的一半值
-					(shape as b2PolygonShape).SetAsBox(init_shape[1]/2/Consts.P2M, init_shape[2]/2/Consts.P2M);
+					(shape as b2PolygonShape).SetAsBox(init_shape[1]/2/EngineConsts.P2M, init_shape[2]/2/EngineConsts.P2M);
 					break;
 				case 1:
 					shape = new b2PolygonShape();
@@ -132,7 +143,7 @@ package com.gamesystem.engine
 					(shape as b2PolygonShape).SetAsArray(init_shape);
 					break;
 				case 2:
-					shape = new b2CircleShape(init_shape[1]/2/Consts.P2M);
+					shape = new b2CircleShape(init_shape[1]/2/EngineConsts.P2M);
 					break;
 			}
 			//将形状添加到刚体修饰物
@@ -149,11 +160,21 @@ package com.gamesystem.engine
 			return body;
 		}
 		/**
-		 * 根据id取得对应的body
+		 * 根据id取得对应的body<br>直接获取
+		 * @param id
+		 * @return 
+		 */		
+		public function getb2BodyInDic(id:int):b2Body
+		{
+			var b:b2Body = box2ds[id] as b2Body;
+			return b;
+		}
+		/**
+		 * 根据id取得对应的body<br>遍历获取
 		 * @param id body的id
 		 * @return body
 		 */		
-		public function getB2Body(id:int):b2Body
+		public function getb2BodyInList(id:int):b2Body
 		{
 			var b:b2Body;
 			for (b=_world.GetBodyList();b;b.GetNext())
@@ -170,14 +191,9 @@ package com.gamesystem.engine
 		 */		
 		public function destroyB2Body(id:int):void
 		{
-			var b:b2Body = getB2Body(id);
+			var b:b2Body = getb2BodyInDic(id);
 			if(b)
 				_world.DestroyBody(b);
-		}
-		/**摧毁关节*/
-		public function destroyJoint(joint:b2Joint):void
-		{
-			_world.DestroyJoint(joint);
 		}
 		/**创建鼠标关节*/
 		public function createMouseJoint(body:b2Body,m_mouse_P:b2Vec2):b2MouseJoint
@@ -190,7 +206,19 @@ package com.gamesystem.engine
 			jointdef.target.Set(m_mouse_P.x,m_mouse_P.y);//更新鼠标关节拖动的点
 			jointdef.maxForce = 300.0 * body.GetMass();//设置鼠标可以施加的最大的力
 			joint = _world.CreateJoint(jointdef) as b2MouseJoint;
+			box2ds[EngineConsts.mouseJoint] = joint;
 			return joint;
+		}
+		/**设置鼠标关节目标*/
+		public function setMouseJointTarget(x:Number,y:Number):void
+		{
+			var mouseJoint:b2MouseJoint = box2ds[EngineConsts.mouseJoint];
+			if(mouseJoint) mouseJoint.SetTarget(new b2Vec2(x,y));
+		}
+		/**摧毁鼠标关节*/
+		public function destroyMouseJoint():void
+		{
+			destroyJoint(EngineConsts.mouseJoint);
 		}
 		/**创建距离关节*/
 		public function createDistanceJoint(bodyA:b2Body,bodyB:b2Body,localAnchorA:Point,localAnchorB:Point,length:Number):b2DistanceJoint
@@ -204,9 +232,9 @@ package com.gamesystem.engine
 //			jointdef.bodyB = bodyB;
 //			jointdef.localAnchorA = new b2Vec2(localAnchorA.x/Consts.PIXEL_TO_METER,localAnchorA.y/Consts.PIXEL_TO_METER);
 //			jointdef.localAnchorB = new b2Vec2(localAnchorB.x/Consts.PIXEL_TO_METER,localAnchorB.y/Consts.PIXEL_TO_METER);
-			jointdef.Initialize(bodyA,bodyB,new b2Vec2(localAnchorA.x/Consts.P2M,localAnchorA.y/Consts.P2M),
-				new b2Vec2(localAnchorB.x/Consts.P2M,localAnchorB.y/Consts.P2M));
-			jointdef.length = length/Consts.P2M;
+			jointdef.Initialize(bodyA,bodyB,new b2Vec2(localAnchorA.x/EngineConsts.P2M,localAnchorA.y/EngineConsts.P2M),
+				new b2Vec2(localAnchorB.x/EngineConsts.P2M,localAnchorB.y/EngineConsts.P2M));
+			jointdef.length = length/EngineConsts.P2M;
 			joint = _world.CreateJoint(jointdef) as b2DistanceJoint;
 			return joint;
 		}
@@ -220,8 +248,8 @@ package com.gamesystem.engine
 			//用bodyA、bodyB和anchor节点初始化马达关节
 			jointdef.bodyA = bodyA;
 			jointdef.bodyB = bodyB;
-			jointdef.localAnchorA = new b2Vec2(localAnchorA.x/Consts.P2M,localAnchorA.y/Consts.P2M);
-			jointdef.localAnchorB = new b2Vec2(localAnchorB.x/Consts.P2M,localAnchorB.y/Consts.P2M);
+			jointdef.localAnchorA = new b2Vec2(localAnchorA.x/EngineConsts.P2M,localAnchorA.y/EngineConsts.P2M);
+			jointdef.localAnchorB = new b2Vec2(localAnchorB.x/EngineConsts.P2M,localAnchorB.y/EngineConsts.P2M);
 //			jointdef.Initialize(bodyA,bodyB,new b2Vec2(localAnchorA.x/Consts.PIXEL_TO_METER,localAnchorA.y/Consts.PIXEL_TO_METER));
 			//设置连接的两个刚体之间不进行碰撞检测
 			jointdef.collideConnected = false;
@@ -234,6 +262,13 @@ package com.gamesystem.engine
 			//创建马达关节
 			joint = _world.CreateJoint(jointdef) as b2RevoluteJoint;
 			return joint;
+		}
+		/**摧毁关节*/
+		public function destroyJoint(id:int):void
+		{
+			var joint:b2Joint = box2ds[id];
+			_world.DestroyJoint(joint);
+			delete box2ds[id];
 		}
 	}
 }
