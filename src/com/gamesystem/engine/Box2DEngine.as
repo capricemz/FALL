@@ -1,17 +1,14 @@
 package com.gamesystem.engine
 {
 	import Box2D.Common.Math.b2Vec2;
-	import Box2D.Dynamics.Joints.b2MouseJoint;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
 	
 	import com.gamesystem.engine.I_Fs.IStuff;
 	
-	import flash.display.DisplayObjectContainer;
 	import flash.display.GradientType;
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Matrix;
@@ -133,7 +130,7 @@ package com.gamesystem.engine
 		{
 			event.stopPropagation();
 			if(hasMouseJoint)
-				theBox2D.setMouseJointTarget(event.stageX/EngineConsts.P2M,event.stageY/EngineConsts.P2M);
+				theBox2D.setMouseJointTarget(event.stageX,event.stageY);
 		}
 		/**启动引擎*/
 		public function startEngine():void

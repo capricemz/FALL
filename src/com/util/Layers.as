@@ -9,6 +9,7 @@ package com.util
 		{
 			super();
 		}
-		public static var stage:Stage;
+		public static var inst:Layers;
+		
 	}
 }

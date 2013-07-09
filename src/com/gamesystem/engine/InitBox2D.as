@@ -213,7 +213,7 @@ package com.gamesystem.engine
 		public function setMouseJointTarget(x:Number,y:Number):void
 		{
 			var mouseJoint:b2MouseJoint = box2ds[EngineConsts.mouseJoint];
-			if(mouseJoint) mouseJoint.SetTarget(new b2Vec2(x,y));
+			if(mouseJoint) mouseJoint.SetTarget(new b2Vec2(x/EngineConsts.P2M,y/EngineConsts.P2M));
 		}
 		/**摧毁鼠标关节*/
 		public function destroyMouseJoint():void
