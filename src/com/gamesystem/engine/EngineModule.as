@@ -17,7 +17,7 @@ package com.gamesystem.engine
 			switch (msgId)
 			{
 				case MsgIds.ENGINE_INIT:
-					var box2d_engine:Box2DEngine = new Box2DEngine(Layers.inst.stage);
+					var box2d_engine:Box2DEngine = new Box2DEngine();
 					box2d_engine.startEngine();
 					break;
 			}

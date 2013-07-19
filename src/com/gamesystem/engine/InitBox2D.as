@@ -99,6 +99,17 @@ package com.gamesystem.engine
 			return debugSprite;
 		}
 		/**
+		 *Query the world for all fixtures that contain a point.
+		 * @param callback callback a user implemented callback class. It should match signature function Callback(fixture:b2Fixture):Boolean
+		 *  Return true to continue to the next fixture. 
+		 * @param p
+		 */		
+		public function toQueryPoint(callback:Function,x:Number,y:Number):void
+		{
+			var b2v:b2Vec2 = new b2Vec2(x/EngineConsts.P2M,y/EngineConsts.P2M);
+			_world.QueryPoint(callback,b2v);
+		}
+		/**
 		 * 构建一个刚体
 		 * @param type 刚体类型
 		 * @param init_point 初始位置
@@ -196,14 +207,14 @@ package com.gamesystem.engine
 				_world.DestroyBody(b);
 		}
 		/**创建鼠标关节*/
-		public function createMouseJoint(body:b2Body,m_mouse_P:b2Vec2):b2MouseJoint
+		public function createMouseJoint(body:b2Body,x:Number,y:Number):b2MouseJoint
 		{
 			var joint:b2MouseJoint,jointdef:b2MouseJointDef;
 			jointdef = new b2MouseJointDef();
 			jointdef.bodyA = _world.GetGroundBody();//设置鼠标关节的一个节点为空刚体，GetGroundBody()可以理解为空刚体
 			jointdef.bodyB = body;//设置鼠标关节的另一个刚体为鼠标点击的刚体
 			jointdef.collideConnected = true;
-			jointdef.target.Set(m_mouse_P.x,m_mouse_P.y);//更新鼠标关节拖动的点
+			jointdef.target.Set(x/EngineConsts.P2M,y/EngineConsts.P2M);//更新鼠标关节拖动的点
 			jointdef.maxForce = 300.0 * body.GetMass();//设置鼠标可以施加的最大的力
 			joint = _world.CreateJoint(jointdef) as b2MouseJoint;
 			box2ds[EngineConsts.mouseJoint] = joint;

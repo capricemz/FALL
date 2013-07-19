@@ -9,7 +9,8 @@ package com.framework
 	
 
 	/**
-	 * 模块注册移除处理类
+	 * 模块注册移除处理类<br>
+	 * 用于对消息进行模块注册或删除
 	 * @author mz
 	 */	
 	public class ModulesHandle

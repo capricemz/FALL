@@ -5,6 +5,7 @@ package com.gamesystem.engine
 	import Box2D.Dynamics.b2Fixture;
 	
 	import com.gamesystem.engine.I_Fs.IStuff;
+	import com.util.Layers;
 	
 	import flash.display.GradientType;
 	import flash.display.Sprite;
@@ -26,20 +27,17 @@ package com.gamesystem.engine
 		private var timeStep:Number = 1/30,velocityInterations:int = 20,positionIterations:int = 20;
 		/**刷新器*/
 		private var timer:Timer,delay:Number;
-		/**显示舞台*/
-		private var stage:Stage
 		
-		public function Box2DEngine(stage:Stage)
+		public function Box2DEngine()
 		{
 			super();
-			this.stage = stage;
 			//添加舞台事件
 			/*addEventListener(MouseEvent.CLICK,onClick,true);*/
 			
 			drawBackground();
 			theBox2D = InitBox2D.getInst();
 			theBox2D.creatWorld();
-			stage.addChild(theBox2D.getDebugDraw());
+			Layers.inst.layerMain.addChild(theBox2D.getDebugDraw());
 			
 			delay = 1000*timeStep;
 			timer = new Timer(delay);
@@ -61,7 +59,7 @@ package com.gamesystem.engine
 			bg.graphics.beginGradientFill(GradientType.RADIAL,[0xffffff,0xffaa00],[0.3,0.2],[0,255],matrix);
 			bg.graphics.drawRect(0,0,750,750);
 			bg.graphics.endFill();
-			stage.addChild(bg);
+			Layers.inst.layerMain.addChild(bg);
 		}
 		/**更新处理*/
 		protected function handleTimer(event:TimerEvent):void
@@ -91,13 +89,14 @@ package com.gamesystem.engine
 		{
 			if(boolean)
 			{
-				stage.addEventListener(MouseEvent.MOUSE_DOWN,onDown);
-				stage.addEventListener(MouseEvent.MOUSE_UP,onUp);
+				Layers.inst.layerMain.addEventListener(MouseEvent.MOUSE_DOWN,onDown);
+				Layers.inst.layerMain.addEventListener(MouseEvent.MOUSE_UP,onUp);
 			}
 			else
 			{
-				stage.removeEventListener(MouseEvent.MOUSE_DOWN,onDown);
-				stage.removeEventListener(MouseEvent.MOUSE_UP,onUp);
+				Layers.inst.layerMain.removeEventListener(MouseEvent.MOUSE_DOWN,onDown);
+				Layers.inst.layerMain.removeEventListener(MouseEvent.MOUSE_UP,onUp);
+				Layers.inst.layerMain.removeEventListener(MouseEvent.MOUSE_MOVE,onMove);
 			}
 		}
 		protected function onDown(event:MouseEvent):void
@@ -105,16 +104,15 @@ package com.gamesystem.engine
 			event.stopPropagation();
 			if(hasMouseJoint)
 				return;
-			var mouse_b2v:b2Vec2 = new b2Vec2(event.stageX/EngineConsts.P2M,event.stageY/EngineConsts.P2M);
 			var fun:Function = function (fixture:b2Fixture):void
 			{
 				if(fixture)
 				{
-					theBox2D.createMouseJoint(fixture.GetBody(),mouse_b2v);
-					stage.addEventListener(MouseEvent.MOUSE_MOVE,onMove);
+					theBox2D.createMouseJoint(fixture.GetBody(),event.stageX,event.stageY);
+					Layers.inst.layerMain.addEventListener(MouseEvent.MOUSE_MOVE,onMove);
 				}
 			};
-			theBox2D.world.QueryPoint(fun,mouse_b2v);
+			theBox2D.toQueryPoint(fun,event.stageX,event.stageY);
 			hasMouseJoint = true;
 		}
 		protected function onUp(event:MouseEvent):void
@@ -122,7 +120,7 @@ package com.gamesystem.engine
 			event.stopPropagation();
 			if(!hasMouseJoint)
 				return;
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE,onMove);
+			Layers.inst.layerMain.removeEventListener(MouseEvent.MOUSE_MOVE,onMove);
 			theBox2D.destroyMouseJoint();
 			hasMouseJoint = false;
 		}

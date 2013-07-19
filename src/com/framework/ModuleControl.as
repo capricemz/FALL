@@ -4,7 +4,8 @@ package com.framework
 	import flash.utils.Dictionary;
 
 	/**
-	 * 模块控制类
+	 * 模块控制类<br>
+	 * 提供模块的注册、反注册及调用方法
 	 * @author mz
 	 */	
 	public class ModuleControl
