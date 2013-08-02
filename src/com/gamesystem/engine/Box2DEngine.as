@@ -5,6 +5,7 @@ package com.gamesystem.engine
 	import Box2D.Dynamics.b2Fixture;
 	
 	import com.gamesystem.engine.I_Fs.IStuff;
+	import com.gamesystem.engine.I_Fs.IUserData;
 	import com.util.Layers;
 	
 	import flash.display.GradientType;
@@ -14,6 +15,7 @@ package com.gamesystem.engine
 	import flash.events.TimerEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	/**
@@ -31,8 +33,6 @@ package com.gamesystem.engine
 		public function Box2DEngine()
 		{
 			super();
-			//添加舞台事件
-			/*addEventListener(MouseEvent.CLICK,onClick,true);*/
 			
 			drawBackground();
 			theBox2D = InitBox2D.getInst();
@@ -42,12 +42,6 @@ package com.gamesystem.engine
 			delay = 1000*timeStep;
 			timer = new Timer(delay);
 			timer.addEventListener(TimerEvent.TIMER,handleTimer);
-			
-		}
-		protected function onClick(event:MouseEvent):void
-		{
-			var body:b2Body = theBox2D.creatB2Body(b2Body.b2_dynamicBody,new Point(event.stageX,event.stageY),[2,10]);
-			body.SetLinearVelocity(new b2Vec2(0,10));
 			
 		}
 		/**绘制显示的背景*/
@@ -75,9 +69,9 @@ package com.gamesystem.engine
 			{
 				var _b:b2Body = b;
 				b = b.GetNext();
-				var istuff:IStuff = _b.GetUserData();
-				if(istuff)
-					istuff.update();
+				var stuff:IStuff = _b.GetUserData();
+				if(stuff)
+					stuff.update();
 			}
 		}
 		private var hasMouseJoint:Boolean;
@@ -141,9 +135,9 @@ package com.gamesystem.engine
 			timer.stop();
 		}
 		/**创建b2Body*/
-		public function creatB2Body():void
+		public function creatB2Body(userData:IUserData):void
 		{
-			/*theBox2D.creatB2Body();*/
+			theBox2D.creatB2Body(userData);
 		}
 		public function destroyB2Body(id:int):void
 		{

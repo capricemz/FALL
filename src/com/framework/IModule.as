@@ -13,6 +13,6 @@ package com.framework
 		 * @param msgId 消息id
 		 * @param msg 消息内容
 		 */		
-		function handle(msgId:int,msg:ByteArray):void
+		function handle(msgId:int,msg:*):void
 	}
 }

@@ -8,6 +8,8 @@ package com.framework
 	{
 		//引擎模块
 		public static const ENGINE_INIT:int = 100;
+		public static const ENGINE_CREATE_BODY:int = 101;
+		public static const ENGINE_DESTROY_BODY:int = 102;
 		
 		//时间模块
 		public static const TIME_INIT:int = 200;

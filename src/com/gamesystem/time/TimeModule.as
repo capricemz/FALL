@@ -14,7 +14,7 @@ package com.gamesystem.time
 		{
 			super();
 		}
-		override public function handle(msgId:int, msg:ByteArray):void
+		override public function handle(msgId:int, msg:*):void
 		{
 			
 		}

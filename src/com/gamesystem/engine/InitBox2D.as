@@ -111,20 +111,21 @@ package com.gamesystem.engine
 		}
 		/**
 		 * 构建一个刚体
-		 * @param type 刚体类型
-		 * @param init_point 初始位置
+		 * @param userData 相关数据
 		 * @return 一个刚体
 		 */		
-		public function creatB2Body(type:uint,init_point:Point,init_shape:Array):b2Body
+		public function creatB2Body(userData:IUserData):b2Body
 		{
+			var data:Object = userData.data;
 			//1.需要创建的墙刚体
 			var body:b2Body;
 			//2.刚体定义
 			var bodyDef:b2BodyDef = new b2BodyDef();
+			bodyDef.userData = userData;
 			//刚体类型和位置
-			bodyDef.type = type;
+			bodyDef.type = data.type;
 			//注意刚体的注册中心都是在物体的中心位置
-			bodyDef.position.Set(init_point.x/EngineConsts.P2M, init_point.y/EngineConsts.P2M);
+			bodyDef.position.Set(data.x/EngineConsts.P2M, data.y/EngineConsts.P2M);
 			bodyDef.fixedRotation = false;
 			bodyDef.allowSleep = false;
 			//工厂模式创建刚体
@@ -141,20 +142,19 @@ package com.gamesystem.engine
 			
 			//4.创建墙形状
 			var shape:b2Shape;
-			switch(init_shape[0])
+			switch(userData.data.shapeType)
 			{
 				case 0:
 					shape = new b2PolygonShape();
 					//此处参数为宽和高度的一半值
-					(shape as b2PolygonShape).SetAsBox(init_shape[1]/2/EngineConsts.P2M, init_shape[2]/2/EngineConsts.P2M);
+					(shape as b2PolygonShape).SetAsBox(data.shapeWidth/2/EngineConsts.P2M, data.shapeHeight/2/EngineConsts.P2M);
 					break;
 				case 1:
 					shape = new b2PolygonShape();
-					init_shape.shift();
-					(shape as b2PolygonShape).SetAsArray(init_shape);
+					(shape as b2PolygonShape).SetAsArray(data.shapeArray);
 					break;
 				case 2:
-					shape = new b2CircleShape(init_shape[1]/2/EngineConsts.P2M);
+					shape = new b2CircleShape(data.shapeRadius/2/EngineConsts.P2M);
 					break;
 			}
 			//将形状添加到刚体修饰物

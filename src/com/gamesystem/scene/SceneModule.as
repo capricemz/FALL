@@ -16,7 +16,7 @@ package com.gamesystem.scene
 		{
 			super();
 		}
-		override public function handle(msgId:int, msg:ByteArray):void
+		override public function handle(msgId:int, msg:*):void
 		{
 			var model:SceneM,view:SceneV,ctrl:SceneC;
 			switch (msgId)

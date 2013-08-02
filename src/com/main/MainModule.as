@@ -14,7 +14,7 @@ package com.main
 		{
 			super();
 		}
-		override public function handle(msgId:int, msg:ByteArray):void
+		override public function handle(msgId:int, msg:*):void
 		{
 			var mainHandle:MainHandle = new MainHandle();
 			mainHandle.start();

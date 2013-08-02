@@ -19,7 +19,7 @@ package com.framework
 			connect = Connect.getInstance();
 		}
 		
-		public function handle(msgId:int, msg:ByteArray):void
+		public function handle(msgId:int, msg:*):void
 		{
 		}
 	}

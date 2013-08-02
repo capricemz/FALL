@@ -14,7 +14,7 @@ package com.gamesystem.plot
 		{
 			super();
 		}
-		override public function handle(msgId:int, msg:ByteArray):void
+		override public function handle(msgId:int, msg:*):void
 		{
 			
 		}

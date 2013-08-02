@@ -14,7 +14,7 @@ package com.gamesystem.stuff
 		{
 		}
 		
-		public function handle(msgId:int, msg:ByteArray):void
+		public function handle(msgId:int, msg:*):void
 		{
 			switch (msgId)
 			{
