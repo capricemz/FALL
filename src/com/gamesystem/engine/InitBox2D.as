@@ -117,37 +117,20 @@ package com.gamesystem.engine
 		public function creatB2Body(userData:IUserData):b2Body
 		{
 			var data:Object = userData.data;
-			//1.需要创建的墙刚体
-			var body:b2Body;
 			//2.刚体定义
 			var bodyDef:b2BodyDef = new b2BodyDef();
 			bodyDef.userData = userData;
-			//刚体类型和位置
-			bodyDef.type = data.type;
-			//注意刚体的注册中心都是在物体的中心位置
-			bodyDef.position.Set(data.x/EngineConsts.P2M, data.y/EngineConsts.P2M);
-			bodyDef.fixedRotation = false;
-			bodyDef.allowSleep = false;
-			//工厂模式创建刚体
-			body = _world.CreateBody(bodyDef);
-			
-			//3.刚体修饰物定义
-			var fixtureDef:b2FixtureDef = new b2FixtureDef();
-			//密度
-			fixtureDef.density = 1.0;
-			//摩擦粗糙程度
-			fixtureDef.friction = 0.3;
-			//力度返回程度（弹性）
-			fixtureDef.restitution = 1.0;
-			
+			bodyDef.type = data.type;//刚体类型和位置
+			bodyDef.position.Set(data.x/EngineConsts.P2M, data.y/EngineConsts.P2M);//注意刚体的注册中心都是在物体的中心位置
+			bodyDef.fixedRotation = data.fixedRotation ? data.fixedRotation : bodyDef.fixedRotation;
+			bodyDef.allowSleep = data.allowSleep ? data.allowSleep : bodyDef.allowSleep;
 			//4.创建墙形状
 			var shape:b2Shape;
 			switch(userData.data.shapeType)
 			{
 				case 0:
 					shape = new b2PolygonShape();
-					//此处参数为宽和高度的一半值
-					(shape as b2PolygonShape).SetAsBox(data.shapeWidth/2/EngineConsts.P2M, data.shapeHeight/2/EngineConsts.P2M);
+					(shape as b2PolygonShape).SetAsBox(data.shapeWidth/2/EngineConsts.P2M, data.shapeHeight/2/EngineConsts.P2M);//此处参数为宽和高度的一半值
 					break;
 				case 1:
 					shape = new b2PolygonShape();
@@ -157,16 +140,21 @@ package com.gamesystem.engine
 					shape = new b2CircleShape(data.shapeRadius/2/EngineConsts.P2M);
 					break;
 			}
-			//将形状添加到刚体修饰物
-			fixtureDef.shape = shape;
+			//3.刚体修饰物定义
+			var fixtureDef:b2FixtureDef = new b2FixtureDef();
+			fixtureDef.density = data.density ? data.density : fixtureDef.density;//密度
+			fixtureDef.friction = data.friction ? data.friction : fixtureDef.friction;//摩擦粗糙程度
+			fixtureDef.restitution = data.restitution ? data.restitution : fixtureDef.restitution;//力度返回程度（弹性）
+			fixtureDef.filter = data.filter ? data.filter : fixtureDef.filter;//碰撞过滤
+			fixtureDef.isSensor = data.isSensor ? data.isSensor : fixtureDef.isSensor;//是否是传感器
+			fixtureDef.shape = shape;//将形状添加到刚体修饰物
 			
+			/*var mass:b2MassData = new b2MassData();//质量应该通过密度控制，不然会影响刚体的转动
+			mass.mass = 100;*/
+			//1.需要创建的墙刚体,工厂模式创建刚体
+			var body:b2Body; = _world.CreateBody(bodyDef);
 			body.CreateFixture(fixtureDef);
-			
-			//质量应该通过密度控制，不然会影响刚体的转动
-//			var mass:b2MassData = new b2MassData();
-//			mass.mass = 100;
-//			
-//			body.SetMassData(mass);
+			/*body.SetMassData(mass);*/
 			
 			return body;
 		}
