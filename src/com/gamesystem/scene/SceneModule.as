@@ -25,6 +25,8 @@ package com.gamesystem.scene
 					model = new SceneM();
 					view = new SceneV(model);
 					ctrl = new SceneC(model);
+					break;
+				case 2:
 					view.show();
 					break;
 			}

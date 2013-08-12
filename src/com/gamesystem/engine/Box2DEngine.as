@@ -1,6 +1,5 @@
 package com.gamesystem.engine
 {
-	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
 	
@@ -8,14 +7,8 @@ package com.gamesystem.engine
 	import com.gamesystem.engine.I_Fs.IUserData;
 	import com.util.Layers;
 	
-	import flash.display.GradientType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	/**
@@ -34,7 +27,6 @@ package com.gamesystem.engine
 		{
 			super();
 			
-			drawBackground();
 			theBox2D = InitBox2D.getInst();
 			theBox2D.creatWorld();
 			Layers.inst.layerMain.addChild(theBox2D.getDebugDraw());
@@ -42,18 +34,6 @@ package com.gamesystem.engine
 			delay = 1000*timeStep;
 			timer = new Timer(delay);
 			timer.addEventListener(TimerEvent.TIMER,handleTimer);
-			
-		}
-		/**绘制显示的背景*/
-		private function drawBackground():void
-		{
-			var bg:Sprite = new Sprite();
-			var matrix:Matrix = new Matrix();
-			matrix.translate(100,100);
-			bg.graphics.beginGradientFill(GradientType.RADIAL,[0xffffff,0xffaa00],[0.3,0.2],[0,255],matrix);
-			bg.graphics.drawRect(0,0,750,750);
-			bg.graphics.endFill();
-			Layers.inst.layerMain.addChild(bg);
 		}
 		/**更新处理*/
 		protected function handleTimer(event:TimerEvent):void

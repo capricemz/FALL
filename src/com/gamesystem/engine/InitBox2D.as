@@ -1,14 +1,12 @@
 package com.gamesystem.engine
 {
 	import Box2D.Collision.Shapes.b2CircleShape;
-	import Box2D.Collision.Shapes.b2MassData;
 	import Box2D.Collision.Shapes.b2PolygonShape;
 	import Box2D.Collision.Shapes.b2Shape;
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.Joints.b2DistanceJoint;
 	import Box2D.Dynamics.Joints.b2DistanceJointDef;
 	import Box2D.Dynamics.Joints.b2Joint;
-	import Box2D.Dynamics.Joints.b2JointDef;
 	import Box2D.Dynamics.Joints.b2MouseJoint;
 	import Box2D.Dynamics.Joints.b2MouseJointDef;
 	import Box2D.Dynamics.Joints.b2RevoluteJoint;
@@ -16,16 +14,13 @@ package com.gamesystem.engine
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2BodyDef;
 	import Box2D.Dynamics.b2DebugDraw;
-	import Box2D.Dynamics.b2Fixture;
 	import Box2D.Dynamics.b2FixtureDef;
 	import Box2D.Dynamics.b2World;
 	
 	import com.gamesystem.engine.I_Fs.IUserData;
 	
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
 	/**
@@ -66,8 +61,9 @@ package com.gamesystem.engine
 		public function creatWorld():void
 		{
 			_world = new b2World(gravity,doSleep);
-			//false时初始刚体不受重力影响，除非受力
-			_world.SetWarmStarting(true);
+			_world.SetWarmStarting(true);//false时初始刚体不受重力影响，除非受力
+			var contect:MyContact = new MyContact();//碰撞检测
+			_world.SetContactListener(contect);
 			createDebugDraw();
 		}
 		public function get world():b2World
@@ -152,7 +148,7 @@ package com.gamesystem.engine
 			/*var mass:b2MassData = new b2MassData();//质量应该通过密度控制，不然会影响刚体的转动
 			mass.mass = 100;*/
 			//1.需要创建的墙刚体,工厂模式创建刚体
-			var body:b2Body; = _world.CreateBody(bodyDef);
+			var body:b2Body = _world.CreateBody(bodyDef);
 			body.CreateFixture(fixtureDef);
 			/*body.SetMassData(mass);*/
 			
