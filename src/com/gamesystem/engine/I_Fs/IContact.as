@@ -1,6 +1,6 @@
 package com.gamesystem.engine.I_Fs
 {
-	public interface Icontact
+	public interface IContact
 	{
 		/**碰撞另一方的类型*/
 		function getType():String;

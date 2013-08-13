@@ -29,7 +29,8 @@ package com.gamesystem.engine
 			
 			theBox2D = InitBox2D.getInst();
 			theBox2D.creatWorld();
-			Layers.inst.layerMain.addChild(theBox2D.getDebugDraw());
+			if(EngineConsts.isDebugDrawShow)
+				Layers.inst.layerMain.addChild(theBox2D.getDebugDraw());
 			
 			delay = 1000*timeStep;
 			timer = new Timer(delay);
@@ -39,10 +40,9 @@ package com.gamesystem.engine
 		protected function handleTimer(event:TimerEvent):void
 		{
 			theBox2D.world.Step(timeStep,velocityInterations,positionIterations);
-			//在2.1版本清除力，以提高效率
-			theBox2D.world.ClearForces();
-			//绘制
-			theBox2D.world.DrawDebugData();
+			theBox2D.world.ClearForces();//在2.1版本清除力，以提高效率
+			if(EngineConsts.isDebugDrawShow)
+				theBox2D.world.DrawDebugData();//绘制
 			//刷新
 			var b:b2Body = theBox2D.world.GetBodyList();
 			while(b)

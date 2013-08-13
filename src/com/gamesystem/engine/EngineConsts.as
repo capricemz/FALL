@@ -6,6 +6,8 @@ package com.gamesystem.engine
 	 */	
 	public class EngineConsts
 	{
+		public static const isDebugDrawShow:Boolean = true;
+		
 		public static const P2M:int = 30;
 		
 		public static const categotybits_1:uint = 1<<0;
