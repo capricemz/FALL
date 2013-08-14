@@ -1,6 +1,5 @@
 package com.framework
 {
-	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 
 	/**
@@ -70,7 +69,7 @@ package com.framework
 		 * @param msgId
 		 * @param msg
 		 */		
-		public function callModule(moduleId:int,msgId:int = 0,msg:ByteArray = null):void
+		public function callModule(moduleId:int,msgId:int = 0,msg:* = null):void
 		{
 			if(dic[moduleId])//若该moduleId已注册过模块
 			{

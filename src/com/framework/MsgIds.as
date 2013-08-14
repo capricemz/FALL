@@ -7,22 +7,26 @@ package com.framework
 	public class MsgIds
 	{
 		//引擎模块
-		public static const ENGINE_INIT:int = 100;
-		public static const ENGINE_START:int = 101;
-		public static const ENGINE_STOP:int = 102;
-		public static const ENGINE_CREATE_BODY:int = 103;
-		public static const ENGINE_DESTROY_BODY:int = 104;
+		public static const ENGINE_INIT:int = 1000;
+		public static const ENGINE_START:int = 1001;
+		public static const ENGINE_STOP:int = 1002;
+		public static const ENGINE_CREATE_BODY:int = 1003;
+		public static const ENGINE_DESTROY_BODY:int = 1004;
 		
 		//时间模块
-		public static const TIME_INIT:int = 200;
+		public static const TIME_INIT:int = 2000;
 		
-		//地点模块
-		public static const SCENE_INIT:int = 300;
+		//场景模块
+		public static const SCENE_INIT:int = 3000;
+		public static const SCENE_BUILDING:int = 3001;
+		public static const SCENE_RELEASE:int = 3002;
 		
-		//事物模块
-		public static const STUFF_INIT:int = 400;
+		//活物模块
+		public static const STUFF_INIT:int = 4000;
+		public static const STUFF_BUILDING:int = 4001;
+		public static const STUFF_RELEASE:int = 4002;
 		
-		//事件模块
-		public static const PLOT_INIT:int = 500;
+		//剧情模块
+		public static const PLOT_INIT:int = 5000;
 	}
 }
