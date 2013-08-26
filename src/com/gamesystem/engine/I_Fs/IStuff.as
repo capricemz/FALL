@@ -1,7 +1,9 @@
 package com.gamesystem.engine.I_Fs
 {
-	import engine.Icontact;
-	
+	/**
+	 * 
+	 * @author Administrator
+	 */	
 	public interface IStuff extends IUserData
 	{
 		/**事物更新*/

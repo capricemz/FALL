@@ -1,5 +1,9 @@
 package com.gamesystem.engine.I_Fs
 {
+	/**
+	 * 
+	 * @author Administrator
+	 */	
 	public interface IContact
 	{
 		/**碰撞另一方的类型*/

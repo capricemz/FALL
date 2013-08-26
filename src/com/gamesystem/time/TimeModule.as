@@ -1,6 +1,7 @@
 package com.gamesystem.time
 {
 	import com.framework.BasicModule;
+	import com.framework.MsgIds;
 	
 	import flash.utils.ByteArray;
 	
@@ -16,7 +17,11 @@ package com.gamesystem.time
 		}
 		override public function handle(msgId:int, msg:*):void
 		{
-			
+			switch (msgId)
+			{
+				case MsgIds.TIME_INIT:
+					break;
+			}
 		}
 	}
 }
